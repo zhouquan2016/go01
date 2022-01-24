@@ -1,0 +1,14 @@
+{
+  "datasource": {
+    "host": "zhqn.com",
+    "port": 3306,
+    "username": "demo",
+    "password": "demo",
+    "database": "demo",
+    "type": "mysql",
+    "query": "charset=utf8&parseTime=true&loc=Local"
+  },
+  "private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEA+N7PIZyNYbO+Rdx4Qia8WyRGMZXak01Ttt0RuD+1jii4ZxJa\nbNzr1PbUxdZBtHxQs2oWW0JOX/IiYSRbCIk0Vhb/En4tw8XWIQ+NUR7sQtMSEcvS\n6uxMNvyW/v8nIEXZ4/OPQiMraj/WwreB39Ru8vwxgEU6rRaT0jiVr6MJEpdLcx9O\nynxMRSECznbMFe5aLbe0JTZdw/kObAJ9eojc6VKDOGL2vyDsvXPuCkchG9/CzWQE\nQcIcOMsLjRjKsCWgNrz0Q4tAy0H0Ec/+bKqdFK4F98gkdB3nzuK+/gRCmPr58AnL\ng4nKb1G9S+x0VjBof6xZLROSFnW6Waow2upOkwIDAQABAoIBAFI1v/SZc3av2o3X\nW352r0foPqvIldCM/bdtZZoYqY/RUcDyph5KCDlsZDMKKOBHJJ1v0PzKdXtqUAMI\n8G1sbXZ22EGynsmKA8ceDQ+cCG22rcRlMUJbVn3fiL2pabJWgLi1T0CIv6G0fuwJ\nlIRs902bE3sM42okCCasfH3tfGTAIPBuhwC59AZ8+iusfSrCFbJNrNbrgHktfEBJ\nK0bVduSl3xyOlXTjgQ3mzNjt+ZwkRRhUg/6SPkAHO4eY31VdgZKfdKNgJc5tZXHb\nD/uNzs6slzNRhG7kS/i7bgPHZURnt63Czs7KA8rBl1ilv5IEZSyBGQjuPRT343gf\nTukGBDkCgYEA+8Y56zkYQyURYcEeqOjh8q/bIoPtp5uFekP0WQShXU8mmmh+SY0P\n9NsaFR+yWliFxNkdv98YEV2v+gykaaT9eyyj5HYLyfPzxHs3OfqeqAL68HpdBaO7\nOUxWKd5TQ+gVX2C4Dkn5ZtTA6LIKXkX5qjX3XvbvkqbarfJgYGVe77UCgYEA/Qwb\nC7eA2y4GwKcY6S7g2/CefFyQlFSVPVDw85yBFcpiizxPB9o6/r/uFr2i5qRZBQGz\nU1TKaNyUAhV+E5AtrfW8IDG3sKibIgKZvSpy2rqmnCqNTziIHAhzdRNUUlTvEBJA\nhurSwY5quqFqIWsK0qnjdId7U1H7/B7Krtw+4icCgYEA+rm8k/KXpsYTOTYIQk0o\nNXXK0+RtlqvZkJh7jOp/h1x7JOlKWhSP/1bx8ndONYpSLGXKqniQjzqtNGXClTIo\n+7DIxYqI0uSNrOzHYoWh2c6d9zzjxen3WGgcpjUw1j8YiZLXt+MS6sSUFya2DIvC\nxS5Y2ckvauueefsU3uoUUMECgYEAzDoh9eHjWIIcJw51d3VDO59Gef5HHb/qNvOF\nlEfCkvCledRxwFer94C1yprAx77qrbTCo0WymtEzjz8DYwyhIV5Lt/wIUcaydc99\nfwOscMXlw/I/3Ck3CND1Rg8UpeIwk1r3wyvwbxDfKMMvocr/kChXD+xsZ0Gqyr+b\nO2c8RU8CgYEA+TfYnq8c1MDlknOOp5P7ndIStu3frMJ0sy8l3VhgjzsswFP/DGAi\nZR7PxpzOFtmYlIQ+nHVfTvzNG5xkn9fzGgc+0/PK6enWnVvH9mcuLY4N2xbiqE6a\npNuDTrUsMlp3cLCBDO8pCKKZA60ffzgzOAGFpGFSyVEqTnZRExW2SSI=\n-----END RSA PRIVATE KEY-----\n",
+  "public_key": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA+N7PIZyNYbO+Rdx4Qia8WyRGMZXak01Ttt0RuD+1jii4ZxJabNzr\n1PbUxdZBtHxQs2oWW0JOX/IiYSRbCIk0Vhb/En4tw8XWIQ+NUR7sQtMSEcvS6uxM\nNvyW/v8nIEXZ4/OPQiMraj/WwreB39Ru8vwxgEU6rRaT0jiVr6MJEpdLcx9OynxM\nRSECznbMFe5aLbe0JTZdw/kObAJ9eojc6VKDOGL2vyDsvXPuCkchG9/CzWQEQcIc\nOMsLjRjKsCWgNrz0Q4tAy0H0Ec/+bKqdFK4F98gkdB3nzuK+/gRCmPr58AnLg4nK\nb1G9S+x0VjBof6xZLROSFnW6Waow2upOkwIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+
+}

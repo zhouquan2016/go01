@@ -10,6 +10,8 @@ import (
 	"encoding/hex"
 	"encoding/pem"
 	"errors"
+	"log"
+	"time"
 )
 
 const (
@@ -26,6 +28,10 @@ func Md5(src string) string {
 }
 
 func GenRsaKeys(bits int) (priKey, pubKey string, err error) {
+	startTime := time.Now()
+	defer func() {
+		log.Println("生成rsa公私钥耗时:", time.Now().Sub(startTime).String())
+	}()
 	key, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
 		return "", "", err
@@ -41,12 +47,20 @@ func GenRsaKeys(bits int) (priKey, pubKey string, err error) {
 	return priKey, pubKey, err
 }
 
-func SignWithRsa(privateKey string, src string) (string, error) {
+func decodePrivateKey(privateKey string) (*rsa.PrivateKey, error) {
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil || block.Type != privateBlockType {
-		return "", errors.New("failed to decode PEM block containing private key")
+		return nil, errors.New("failed to decode PEM block containing private key")
 	}
-	key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	return x509.ParsePKCS1PrivateKey(block.Bytes)
+}
+
+func SignWithRsa(privateKey string, src string) (string, error) {
+	startTime := time.Now()
+	defer func() {
+		log.Println("rsa生成签名耗时:", time.Now().Sub(startTime).String())
+	}()
+	key, err := decodePrivateKey(privateKey)
 	if err != nil {
 		return "", err
 	}
@@ -61,7 +75,10 @@ func SignWithRsa(privateKey string, src string) (string, error) {
 }
 
 func VerifyWithRsa(signData string, srcData string, publicKey string) (bool, error) {
-
+	startTime := time.Now()
+	defer func() {
+		log.Println("rsa验证签名耗时:", time.Now().Sub(startTime).String())
+	}()
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil || block.Type != publicBlockType {
 		return false, errors.New("failed to decode PEM block containing private key")
@@ -83,4 +100,17 @@ func VerifyWithRsa(signData string, srcData string, publicKey string) (bool, err
 		return false, err
 	}
 	return true, err
+}
+
+//私钥解密
+func DecodeWithRsa(privateKey string, bytes []byte) ([]byte, error) {
+	startTime := time.Now()
+	defer func() {
+		log.Println("rsa解密耗时:", time.Now().Sub(startTime).String())
+	}()
+	key, err := decodePrivateKey(privateKey)
+	if err != nil {
+		return nil, err
+	}
+	return rsa.DecryptPKCS1v15(rand.Reader, key, bytes)
 }

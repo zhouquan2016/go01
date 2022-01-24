@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go01/api"
 	"go01/security"
 	"go01/util"
 	"testing"
@@ -111,3 +112,33 @@ func TestSign(t *testing.T) {
 //	}
 //	fmt.Println(b)
 //}
+
+func TestDate(t *testing.T) {
+	ds1 := "\"2020-10-12\""
+	ds2 := "\"2020-10-12 14:15:12\""
+	var date api.JsonDate
+	var datetime api.JsonDateTime
+	err := json.Unmarshal([]byte(ds1), &date)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal([]byte(ds2), &datetime)
+	if err != nil {
+		panic(err)
+	}
+	bytes, err := json.Marshal(&date)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("date:", string(bytes))
+	bytes, err = json.Marshal(&datetime)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("datetime:", string(bytes))
+
+}
+
+func TestHttpSign(t *testing.T) {
+
+}
