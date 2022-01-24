@@ -55,7 +55,8 @@ func decodePrivateKey(privateKey string) (*rsa.PrivateKey, error) {
 	return x509.ParsePKCS1PrivateKey(block.Bytes)
 }
 
-func SignWithRsa(privateKey string, src string) (string, error) {
+//私有加签
+func SignWithPrivateKey(privateKey string, src []byte) (string, error) {
 	startTime := time.Now()
 	defer func() {
 		log.Println("rsa生成签名耗时:", time.Now().Sub(startTime).String())
@@ -65,7 +66,7 @@ func SignWithRsa(privateKey string, src string) (string, error) {
 		return "", err
 	}
 	hash := crypto.SHA256.New()
-	hash.Write([]byte(src))
+	hash.Write(src)
 	hashed := hash.Sum(nil)
 	signBytes, err := rsa.SignPKCS1v15(rand.Reader, key, crypto.SHA256, hashed)
 	if err != nil {
@@ -74,16 +75,21 @@ func SignWithRsa(privateKey string, src string) (string, error) {
 	return base64.StdEncoding.EncodeToString(signBytes), nil
 }
 
-func VerifyWithRsa(signData string, srcData string, publicKey string) (bool, error) {
+func decodePublicKey(publicKey string) (*rsa.PublicKey, error) {
+	block, _ := pem.Decode([]byte(publicKey))
+	if block == nil || block.Type != publicBlockType {
+		return nil, errors.New("failed to decode PEM block containing private key")
+	}
+	return x509.ParsePKCS1PublicKey(block.Bytes)
+}
+
+// VerifyWithPublicKey 公钥验签
+func VerifyWithPublicKey(signData string, srcData []byte, publicKey string) (bool, error) {
 	startTime := time.Now()
 	defer func() {
 		log.Println("rsa验证签名耗时:", time.Now().Sub(startTime).String())
 	}()
-	block, _ := pem.Decode([]byte(publicKey))
-	if block == nil || block.Type != publicBlockType {
-		return false, errors.New("failed to decode PEM block containing private key")
-	}
-	key, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	key, err := decodePublicKey(publicKey)
 	if err != nil {
 		return false, err
 	}
@@ -93,7 +99,7 @@ func VerifyWithRsa(signData string, srcData string, publicKey string) (bool, err
 		return false, err
 	}
 	hash := crypto.SHA256.New()
-	hash.Write([]byte(srcData))
+	hash.Write(srcData)
 	hashed := hash.Sum(nil)
 	err = rsa.VerifyPKCS1v15(key, crypto.SHA256, hashed, bytes)
 	if err != nil {
@@ -102,8 +108,8 @@ func VerifyWithRsa(signData string, srcData string, publicKey string) (bool, err
 	return true, err
 }
 
-//私钥解密
-func DecodeWithRsa(privateKey string, bytes []byte) ([]byte, error) {
+//  DecryptWithPrivateKey私钥解密
+func DecryptWithPrivateKey(privateKey string, encryptData string) ([]byte, error) {
 	startTime := time.Now()
 	defer func() {
 		log.Println("rsa解密耗时:", time.Now().Sub(startTime).String())
@@ -112,5 +118,23 @@ func DecodeWithRsa(privateKey string, bytes []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return rsa.DecryptPKCS1v15(rand.Reader, key, bytes)
+	encryptBytes, err := base64.StdEncoding.DecodeString(encryptData)
+	if err != nil {
+		return nil, err
+	}
+	return rsa.DecryptPKCS1v15(rand.Reader, key, encryptBytes)
+}
+
+//EncryptWithPublicKey 公钥加密
+func EncryptWithPublicKey(bs []byte, publicKey string) (string, error) {
+	key, err := decodePublicKey(publicKey)
+	if err != nil {
+		return "", err
+	}
+	encryptBytes, err := rsa.EncryptPKCS1v15(rand.Reader, key, bs)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(encryptBytes), nil
+
 }

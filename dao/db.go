@@ -20,10 +20,10 @@ func initDb() {
 	if err != nil {
 		panic(err)
 	}
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
+	//err = db.Ping()
+	//if err != nil {
+	//	panic(err)
+	//}
 	Db = db
 }
 

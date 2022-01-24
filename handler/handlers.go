@@ -4,10 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"go01/api"
-	"go01/config"
-	"go01/dao"
-	"go01/security"
 	"go01/util"
 	"log"
 	"net/http"
@@ -59,6 +55,7 @@ func RegisterHandlers() {
 	}
 	putAllHandlers(handlerMap, GenHandler)
 	putAllHandlers(handlerMap, MerchantHandler)
+	putAllHandlers(handlerMap, PayHandler)
 	for path, handler := range handlerMap {
 		log.Println(path, " bound on func", runtime.FuncForPC(reflect.ValueOf(handler.Handler).Pointer()).Name())
 		http.Handle(path, handler)
@@ -87,10 +84,7 @@ func handlerError(writer http.ResponseWriter, recoverError interface{}) {
 }
 
 func checkRequest(request *http.Request, handler *RequestHandler) {
-	if handler.Method != "" && request.Method != handler.Method {
-		panic(util.ServiceErrorResult(request.Method+" not support!", ""))
-	}
-
+	util.ValidateError(request.Method == handler.Method, request.Method+" not support!")
 }
 
 func errLog(err interface{}) {
@@ -160,42 +154,4 @@ func index(writer http.ResponseWriter, _ *http.Request) interface{} {
 	writer.WriteHeader(http.StatusOK)
 	_, _ = writer.Write([]byte("welcome!"))
 	return nil
-}
-
-func VerifySign(request *http.Request) {
-
-	signQuery := parseSignQuery(request)
-
-	publicyKey := checkMerchant(signQuery.PlanData)
-
-	valid, err := security.VerifyWithRsa(signQuery.SignData, signQuery.PlanData, publicyKey)
-	util.AssertError(err, "验签失败")
-	util.ValidateError(valid, "验签失败")
-}
-
-func checkMerchant(plain string) string {
-	util.ValidateError(plain != "", "plainData为空")
-	merchanQuery := new(api.MerchantQuery)
-	err := json.Unmarshal([]byte(plain), merchanQuery)
-	util.AssertError(err, "plainData不是json格式")
-
-	merchantId := merchanQuery.MerchantId
-	merchant := dao.MerchantDao.GetById(merchantId)
-	util.ValidateError(merchant != nil, "商户不存在")
-	util.ValidateError(!merchant.Disabled, "商户已被禁用")
-
-	merchantSecret := dao.MerchantSecretDao.GetByMerchantId(merchantId)
-	util.ValidateError(merchantSecret.SecretKey == merchanQuery.SecretKey, "商户密钥不对")
-	util.ValidateError(merchantSecret.ExpireTime.After(time.Now()), "私钥对已过期")
-	return merchantSecret.PublicKey
-}
-
-func parseSignQuery(request *http.Request) *api.SignQuery {
-	bytes := util.Body2Bytes(request)
-	encodeBytes, err := security.DecodeWithRsa(config.Config.PrivateKey, bytes)
-	util.AssertError(err, "解密失败")
-	signQuery := new(api.SignQuery)
-	err = json.Unmarshal(encodeBytes, signQuery)
-	util.AssertError(err, "解密后的数据不是json格式")
-	return signQuery
 }

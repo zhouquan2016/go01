@@ -1,6 +1,8 @@
 package util
 
 import (
+	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -69,9 +71,9 @@ func Body2Json(request *http.Request, v interface{}) {
 }
 
 func Body2Bytes(request *http.Request) []byte {
-	bytes, err := ioutil.ReadAll(request.Body)
+	bs, err := ioutil.ReadAll(request.Body)
 	AssertError(err, "读取body失败")
-	return bytes
+	return bs
 }
 
 type RegexMux struct {
@@ -101,4 +103,19 @@ func compileRegex(pattern string) *regexp.Regexp {
 //
 func RegexMatch(pattern string, src string) bool {
 	return compileRegex(pattern).Match([]byte(src))
+}
+
+func HttpPost(uri string, request interface{}, response interface{}) {
+	bs, err := json.Marshal(request)
+	AssertError(err, "请求参数异常")
+	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+	client := http.Client{Transport: tr}
+	resp, err := client.Post(uri, "application/json", bytes.NewReader(bs))
+	AssertError(err, "请求异常")
+	ValidateError(resp.StatusCode == http.StatusOK, resp.Status)
+
+	repsBytes, err := ioutil.ReadAll(resp.Body)
+	AssertError(err, "返回值异常")
+	err = json.Unmarshal(repsBytes, response)
+	AssertError(err, "返回值转换json失败")
 }

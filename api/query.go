@@ -8,17 +8,6 @@ type MerchantQuery struct {
 	SecretKey string `json:"secret_key"`
 }
 
-//交易请求
-type PayQuery struct {
-	MerchantQuery
-	//交易id
-	TradeId string `json:"trade_id"`
-	//支付的金额(分)
-	PayMoney int64
-	//交易日期
-	TradeDate string
-}
-
 //创建商户请求
 type MerchantCreateQuery struct {
 	//营业执照号码
@@ -37,6 +26,17 @@ type MerchantCreateQuery struct {
 type SignQuery struct {
 	//签文
 	SignData string `json:"sign_data"`
-	//明文
-	PlanData string `json:"plan_data"`
+	//请求参数转换成json字符串,然后再用api商户中心统一公钥加密
+	EncryptData string `json:"encrypt_data"`
+}
+
+//交易请求
+type PayQuery struct {
+	MerchantQuery
+	//交易id
+	TradeId string `json:"trade_id"`
+	//支付的金额(分)
+	PayMoney int64
+	//交易日期
+	TradeDate JsonDate
 }

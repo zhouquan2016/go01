@@ -3,7 +3,7 @@ package dao
 import "time"
 
 type Merchant struct {
-	Id int64 `db:"Id"`
+	Id int64 `db:"id"`
 	//营业执照号码
 	BusinessNo string `db:"business_no"`
 	//公司名称
@@ -27,7 +27,7 @@ type MerchantSecret struct {
 	Id int64 `db:"id"`
 	//商户id
 	MerchantId int64 `db:"merchant_id"`
-	//密钥
+	//请求密钥
 	SecretKey string `db:"secret_key"`
 	//公钥
 	PublicKey string `db:"public_key"`

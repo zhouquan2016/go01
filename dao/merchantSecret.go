@@ -20,7 +20,7 @@ func (*merchantSecretDao) Add(tx *sql.Tx, secret *MerchantSecret) {
 }
 
 func (d *merchantSecretDao) GetByMerchantId(merchantId int64) *MerchantSecret {
-	querySql := "select id, merchant_id, secret_key, public_key, expire_time, create_time, update_time where merchant_id=?"
+	querySql := "select id, merchant_id, secret_key, public_key, expire_time, create_time, update_time from merchant_secret where merchant_id=?"
 	row := queryRow(nil, querySql, merchantId)
 	return d.getOne(row)
 
